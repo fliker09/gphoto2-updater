@@ -17,6 +17,7 @@
 # Updated for gphoto2 2.5.9 at GitHub by Gonzalo Cao
 # Updated for last development release at GitHub by Gonzalo Cao
 # Updated for gphoto2 2.5.10 by Gonzalo Cao
+# Updated for gphoto2 2.5.32+ by Alexandru Barbovschi
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -124,6 +125,8 @@ echo "Updating sources"
 echo "----------------"
 echo
 
+start_time_1=$(date +%s)
+
 apt-get update -qq
 
 echo
@@ -133,6 +136,8 @@ echo "-----------------------"
 echo
 
 apt-get install -y build-essential libltdl-dev libusb-1.0-0-dev libexif-dev udev libpopt-dev libudev-dev pkg-config git automake autoconf autopoint gettext libtool wget libaa1-dev libjpeg-dev libreadline-dev libcdk5-dev libxml2-dev libcurl4-openssl-dev libgd-dev
+
+end_time_1=$(date +%s)
 
 echo
 echo "-------------------------"
@@ -168,11 +173,15 @@ echo "Compiling and installing libgphoto2"
 echo "-----------------------------------"
 echo
 
+start_time_2=$(date +%s)
+
 autoreconf --install --symlink
 ./configure
 make -j "$cores"
 make install
 cd ..
+
+end_time_2=$(date +%s)
 
 echo
 echo "-------------------"
@@ -196,11 +205,15 @@ echo "Compiling and installing gphoto2"
 echo "--------------------------------"
 echo
 
+start_time_3=$(date +%s)
+
 autoreconf --install --symlink
 ./configure
 make -j "$cores"
 make install
 cd ..
+
+end_time_3=$(date +%s)
 
 echo
 echo "-----------------"
@@ -257,8 +270,16 @@ rm -r gphoto2-temp-folder
 
 echo
 echo "--------------------"
-echo "Finished!! Enjoy it!"
+echo "Finished! Enjoy it!"
 echo "--------------------"
 echo
 
 gphoto2 --version
+
+echo
+echo "Getting the required dependencies: $(( $end_time_1 - $start_time_1 ))s"
+echo
+echo "Compiling libgphoto2: $(( $end_time_2 - $start_time_2 ))s"
+echo
+echo "Compiling gphoto2: $(( $end_time_3 - $start_time_3 ))s"
+echo
